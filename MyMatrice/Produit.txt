@@ -1,0 +1,127 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace MyMatrice
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            create_matrice();
+            calcul_matrice();
+        }
+
+        private void sortir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        public void create_matrice()
+        {
+            matrice11.RowCount = Program.ligne1;
+            matrice11.ColumnCount = Program.colonne1;
+            matrice22.RowCount = Program.ligne2;
+            matrice22.ColumnCount = Program.colonne2;
+            for (int i = 0; i < Program.ligne1; i++)
+            {
+                for (int j = 0; j < Program.colonne1; j++)
+                {
+                    matrice11[j, i].Value = Page1.getMyPage.matrice1[j, i].Value;
+                }
+            }
+            for (int i = 0; i < Program.ligne2; i++)
+            {
+                for (int j = 0; j < Program.colonne2; j++)
+                {
+                    matrice22[j, i].Value = Page1.getMyPage.matrice2[j, i].Value;
+                }
+            }
+            txt_opération.Text = Program.Opération;
+            txt_descreption.Text = Program.Description;
+        }
+        public void calcul_matrice()
+        {
+            try
+            {
+                if (txt_opération.Text == "*")
+                {
+                    matrice_resultat.RowCount = Program.ligne1;
+                    matrice_resultat.ColumnCount = Program.colonne2;
+                    for (int i = 0; i < Program.colonne2; i++)
+                    {
+                        for (int j = 0; j < Program.ligne1; j++)
+                        {
+                            matrice_resultat[i, j].Value = 0;
+                            for (int t = 0; t < Program.colonne1; t++)
+                            {
+                                matrice_resultat[i, j].Value = Convert.ToInt32(matrice_resultat[i, j].Value) + 
+                                                               Convert.ToInt32(matrice11[t, j].Value) *
+                                                               Convert.ToInt32(matrice22[i, t].Value);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (txt_opération.Text == "+")
+                    {
+                        matrice_resultat.RowCount = Program.ligne1;
+                        matrice_resultat.ColumnCount = Program.colonne1;
+                        for (int i = 0; i < Program.ligne1; i++)
+                        {
+                            for (int j = 0; j < Program.colonne1; j++)
+                            {
+                                matrice_resultat[j, i].Value = Convert.ToInt32(matrice11[j, i].Value) + Convert.ToInt32(matrice22[j, i].Value);
+                            }
+                        }
+                    }
+                }
+            }
+            catch 
+            {
+                return ;
+            }
+        }
+
+
+        private void matrice11_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                calcul_matrice();
+            }
+        }
+
+        private void matrice22_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                calcul_matrice();
+            }
+        }
+
+        private void matrice22_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != 8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void matrice11_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != 8)
+            {
+                e.Handled = true;
+            }
+        }
+
+    }
+}
